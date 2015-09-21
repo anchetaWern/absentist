@@ -38,6 +38,12 @@ Route::group(array('before' => 'auth', 'after' => 'nocache'), function(){
 
     Route::get('/account', 'AdminController@account');
     Route::post('/account', 'AdminController@updateAccount');
+
+    Route::get('/holidays/new', 'AdminController@newHoliday');
+    Route::post('/holidays/create', 'AdminController@createHoliday');
+
+    Route::get('/holidays/{id}', 'AdminController@holiday');
+    Route::post('/holidays/{id}', 'AdminController@updateHoliday');
 });
 
 Route::get('/password/forgot', 'RemindersController@getRemind');

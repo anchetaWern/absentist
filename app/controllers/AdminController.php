@@ -44,6 +44,62 @@ class AdminController extends BaseController {
     }
 
 
+    public function newHoliday(){
+
+        $holidays = Holiday::orderBy('date', 'DESC')->get();
+
+        $page_data = array(
+            'holidays' => $holidays
+        );
+
+        $this->layout->title = 'New Holiday';
+        $this->layout->content = View::make('admin.new_holiday', $page_data);
+    }
+
+
+    public function createHoliday(){
+
+        $holiday = new Holiday;
+        $holiday->name = Input::get('name');
+        $holiday->date = Input::get('date');
+        $holiday->save();
+
+        return Redirect::back()->with('message', array(
+            'type' => 'success',
+            'text' => 'Created Holiday!'
+        ));
+
+    }
+
+
+    public function holiday($id){
+
+        $holiday = Holiday::find($id);
+
+        $page_data = array(
+            'holiday' => $holiday
+        );
+
+        $this->layout->title = 'Update Holiday';
+        $this->layout->content = View::make('admin.holiday', $page_data);
+    }
+
+
+    public function updateHoliday($id){
+
+        $holiday = Holiday::find($id);
+        $holiday->name = Input::get('name');
+        $holiday->date = Input::get('date');
+        $holiday->save();
+
+        return Redirect::back()->with('message', array(
+            'type' => 'success',
+            'text' => 'Updated Holiday!'
+        ));        
+
+    }
+
+
     public function logout(){
 
         Session::flush();

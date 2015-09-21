@@ -100,6 +100,102 @@ class AdminController extends BaseController {
     }
 
 
+    public function newClass(){
+
+        $days = array(
+            'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'
+        );
+
+        $page_data = array(
+            'days' => $days
+        );
+
+        $this->layout->title = 'Create New Class';
+        $this->layout->content = View::make('admin.new_class', $page_data);
+
+    }
+
+
+    public function createClass(){
+
+        $user_id = Auth::user()->id;
+
+        $name = Input::get('name');
+        $details = Input::get('details');
+
+        $students = Input::get('students');
+        $students = explode("\n", $students);
+        
+        $drop_absences_count = Input::get('drop_absences_count');
+
+        $days = Input::get('days');
+        $time_from = Input::get('time_from');
+        $time_to = Input::get('time_to');
+
+     
+
+        $class_id = DB::table('classes')->insertGetId(array(
+            'user_id' => $user_id,
+            'name' => $name,
+            'class_code' => str_random(10),
+            'details' => $details,
+            'drop_absences_count' => $drop_absences_count,
+            'days' => json_encode($days),
+            'time_from' => $time_from,
+            'time_to' => $time_to
+        ));
+        
+        
+        foreach($students as $row){
+            if(!empty($row)){
+
+                $exploded_row = explode("\t", $row);
+                
+                $student_id = trim($exploded_row[0]);
+                $student_name = trim($exploded_row[1]);
+
+                $name_length = strlen($student_name);
+                $delimiter_position = strpos($student_name, ',');
+
+                $last_name = substr($student_name, 0, $delimiter_position);
+                $middle_initial = substr($student_name, -2);
+                $first_name = trim(substr($student_name, $delimiter_position + 1, -3)); 
+
+                $gender = trim($exploded_row[2]);
+
+
+                $student = Student::find($student_id);
+                if(!$student){
+                    $student = new Student;
+                    $student->id = $student_id;
+                    $student->last_name = $last_name;
+                    $student->first_name = $first_name;
+                    $student->middle_initial = $middle_initial;
+                    $student->gender = $gender;
+                    $student->save();
+                }
+
+                $student_class_id = $class_id . $student_id;
+                $student_class = StudentClass::find($student_class_id);
+                if(!$student_class){
+                    $student_class = new StudentClass;
+                    $student_class->id = $student_class_id;
+                    $student_class->student_id = $student_id;
+                    $student_class->class_id = $class_id;
+                    $student_class->current_absence_count = 0; //default
+                    $student_class->save();
+                }
+                
+                
+            }
+        }
+        
+        return Redirect::back()->with('message', array('type' => 'success', 'text' => 'Class Created!'));
+
+    }
+
+
+
     public function logout(){
 
         Session::flush();

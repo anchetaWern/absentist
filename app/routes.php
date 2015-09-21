@@ -44,6 +44,10 @@ Route::group(array('before' => 'auth', 'after' => 'nocache'), function(){
 
     Route::get('/holidays/{id}', 'AdminController@holiday');
     Route::post('/holidays/{id}', 'AdminController@updateHoliday');
+
+    Route::get('/classes/new', 'AdminController@newClass');
+    Route::post('/classes/create', 'AdminController@createClass');
+
 });
 
 Route::get('/password/forgot', 'RemindersController@getRemind');
@@ -51,3 +55,7 @@ Route::post('/password/remind', 'RemindersController@postRemind');
 
 Route::get('/password/reset/{token}', 'RemindersController@getReset');
 Route::post('/password/reset', 'RemindersController@postReset');
+
+Route::get('/tester', function(){
+	return range('monday', 'sunday');
+});

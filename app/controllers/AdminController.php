@@ -132,7 +132,7 @@ class AdminController extends BaseController {
         $time_from = Input::get('time_from');
         $time_to = Input::get('time_to');
 
-     
+
 
         $class_id = DB::table('classes')->insertGetId(array(
             'user_id' => $user_id,
@@ -194,6 +194,99 @@ class AdminController extends BaseController {
 
     }
 
+
+
+    public function classes(){
+
+        $user_id = Auth::user()->id;
+
+        $classes = DB::table('classes')
+            ->where('user_id', '=', $user_id)
+            ->get();
+
+        $page_data = array(
+            'classes' => $classes
+        );
+
+        $this->layout->title = 'Classes';
+        $this->layout->content = View::make('admin.classes', $page_data);
+
+    }
+
+
+    public function viewClass($class_id){
+
+        $days = array(
+            'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'
+        );
+
+        $class = DB::table('classes')
+            ->where('id', '=', $class_id)
+            ->first();
+
+        $students = DB::table('students')
+            ->join('student_classes', 'students.id', '=', 'student_classes.student_id')
+            ->select('students.id AS student_id', 'student_classes.id AS student_class_id', 'last_name', 'first_name', 'middle_initial', 'gender')
+            ->where('student_classes.class_id', '=', $class_id)
+            ->orderBy('gender', 'DESC')
+            ->orderBy('last_name', 'ASC')
+            ->get();
+
+        $class_days = json_decode($class->days, true);
+
+        $page_data = array(
+            'days' => $days,
+            'class' => $class,
+            'class_days' => $class_days,
+            'students' => $students
+        );
+
+        $this->layout->title = $class->name;
+        $this->layout->content = View::make('admin.class', $page_data);
+    }
+
+
+    public function updateClass($id){
+
+        $user_id = Auth::user()->id;
+
+        $name = Input::get('name');
+        $details = Input::get('details');
+
+        $drop_absences_count = Input::get('drop_absences_count');
+
+        $days = Input::get('days');
+        $time_from = Input::get('time_from');
+        $time_to = Input::get('time_to');
+
+
+        DB::table('classes')
+            ->where('user_id', '=', $user_id)
+            ->where('id', '=', $id)
+            ->update(array(
+                'user_id' => $user_id,
+                'name' => $name,
+                'details' => $details,
+                'drop_absences_count' => $drop_absences_count,
+                'days' => json_encode($days),
+                'time_from' => $time_from,
+                'time_to' => $time_to
+            ));
+        
+        return Redirect::back()->with('message', array('type' => 'success', 'text' => 'Class Updated!'));
+
+
+    }
+
+
+    public function dropStudent(){
+
+        $id = Input::get('id');
+        $class_student = StudentClass::find($id);
+        $class_student->delete();
+
+        return array('type' => 'ok');
+    }
 
 
     public function logout(){

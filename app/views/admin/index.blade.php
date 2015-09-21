@@ -8,6 +8,9 @@
 				<a href="/holidays/new">Create Holidays</a>
 			</li>
 			<li>
+				<a href="/classes">List Classes</a>
+			</li>
+			<li>
 				<a href="/classes/new">Create a Class</a>
 			</li>
 		</ul>

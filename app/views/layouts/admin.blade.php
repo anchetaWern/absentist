@@ -13,6 +13,9 @@
   <link rel="stylesheet" href="{{ asset('assets/lib/bootstrap/css/bootstrap.min.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/css/admin.css') }}">
 
+  <link rel="stylesheet" href="{{ asset('assets/lib/bootstrap-dialog/bootstrap-dialog.min.css') }}">
+
+
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -61,5 +64,9 @@
 
   <script src="{{ asset('assets/js/jquery.js') }}"></script>
   <script src="{{ asset('assets/lib/bootstrap/js/bootstrap.min.js') }}"></script>
+
+  <script src="{{ asset('assets/lib/bootstrap-dialog/bootstrap-dialog.min.js') }}"></script>
+  <script src="{{ asset('assets/js/class.js') }}"></script>
+  
 </body>
 </html>

@@ -48,6 +48,13 @@ Route::group(array('before' => 'auth', 'after' => 'nocache'), function(){
     Route::get('/classes/new', 'AdminController@newClass');
     Route::post('/classes/create', 'AdminController@createClass');
 
+    Route::get('/classes', 'AdminController@classes');
+    
+    Route::get('/class/{id}', 'AdminController@viewClass');
+    Route::post('/class/{id}', 'AdminController@updateClass');
+
+    Route::post('/student/drop', 'AdminController@dropStudent');
+
 });
 
 Route::get('/password/forgot', 'RemindersController@getRemind');

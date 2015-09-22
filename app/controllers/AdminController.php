@@ -501,6 +501,28 @@ class AdminController extends BaseController {
     }
 
 
+    public function absences($id){
+
+        $class_id = substr($id, 0, 1);
+        $student_id = substr($id, 1);
+
+        $student = Student::find($student_id);
+
+        $absences = StudentAttendance::where('student_id', '=', $student_id)
+            ->where('class_id', '=', $class_id)
+            ->get();
+  
+        $page_data = array(
+            'student' => $student,
+            'absences' => $absences
+        );
+
+        $this->layout->title = 'Absences';
+        $this->layout->content = View::make('admin.absences', $page_data);
+
+    }
+
+
     public function logout(){
 
         Session::flush();

@@ -8,6 +8,7 @@
 					<tr>
 						<th>Student</th>
 						<th>Drop Card</th>
+						<th>Absences</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -15,6 +16,7 @@
 					<tr>
 						<td>{{ $student->last_name }}, {{ $student->first_name }} {{ $student->middle_initial }}</td>
 						<td><button type="button" class="drop-card btn btn-warning" data-id="{{ $student->id }}">drop</button></td>
+						<td><a href="/absences/{{ $student->id }}">view</a></td>
 					</tr>
 					@endforeach
 				</tbody>

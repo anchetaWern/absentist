@@ -59,7 +59,7 @@
 						<th>ID Number</th>
 						<th>Student</th>
 						<th>Gender</th>
-						<th>Drop</th>
+						<th>Remove</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -68,7 +68,7 @@
 						<td>{{ $student->student_id }}</td>
 						<td>{{ $student->last_name }}, {{ $student->first_name }} {{ $student->middle_initial }}</td>
 						<td>{{ $student->gender }}</td>
-						<td><button type="button" class="drop-student btn btn-danger" data-id="{{ $student->student_class_id }}" data-name="{{ $student->last_name }}, {{ $student->first_name }}">drop</button></td>
+						<td><button type="button" class="remove-student btn btn-danger" data-id="{{ $student->student_class_id }}" data-name="{{ $student->last_name }}, {{ $student->first_name }}">remove</button></td>
 					</tr>
 					@endforeach
 				</tbody>

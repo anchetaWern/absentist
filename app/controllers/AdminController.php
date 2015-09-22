@@ -280,7 +280,7 @@ class AdminController extends BaseController {
     }
 
 
-    public function dropStudent(){
+    public function removeStudent(){
 
         $id = Input::get('id');
         $class_student = StudentClass::find($id);
@@ -421,6 +421,83 @@ class AdminController extends BaseController {
             'text' => 'Updated Attendance!'
         );
     
+    }
+
+
+    public function studentsToDrop($class_id){
+
+        $class = DB::table('classes')
+            ->where('id', '=', $class_id)
+            ->pluck('name');
+
+        $to_drop = DB::table('student_classes')
+            ->join('students', 'student_classes.student_id', '=', 'students.id')
+            ->select('student_classes.id AS id', 'students.id AS student_id', 'last_name', 'first_name', 'middle_initial')
+            ->where('class_id', '=', $class_id)
+            ->where('status', '=', 'to_drop')
+            ->get();
+
+
+        $page_data = array(
+            'class' => $class,
+            'to_drop' => $to_drop
+        );
+
+        $this->layout->title = 'Students to Drop';
+        $this->layout->content = View::make('admin.to_drop', $page_data);
+    }
+
+
+    public function droppedStudents($class_id){
+
+        $class = DB::table('classes')
+            ->where('id', '=', $class_id)
+            ->pluck('name');
+
+        $dropped = DB::table('student_classes')
+                ->join('students', 'student_classes.student_id', '=', 'students.id')
+                ->select('student_classes.id AS id', 'students.id AS student_id', 'last_name', 'first_name', 'middle_initial')
+                ->where('class_id', '=', $class_id)
+                ->where('status', '=', 'dropped')
+                ->get();
+
+
+        $page_data = array(
+            'class' => $class,
+            'dropped' => $dropped
+        );
+
+        $this->layout->title = 'Students to Drop';
+        $this->layout->content = View::make('admin.dropped', $page_data);
+    }
+
+
+    public function updateStudentStatus(){
+
+
+        $id = Input::get('id');
+        $status = Input::get('status');
+
+        DB::table('student_classes')
+            ->where('id', '=', $id)
+            ->update(array(
+                'status' => $status
+            ));
+
+        if($status === 'has_card'){
+            //reset current_absence_count
+            DB::table('student_classes')
+                ->where('id', '=', $id)
+                ->update(array(
+                    'current_absence_count' => 0
+                ));
+        }
+
+        return array(
+            'type' => 'success',
+            'text' => 'Updated Status!'
+        );
+
     }
 
 

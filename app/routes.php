@@ -53,10 +53,17 @@ Route::group(array('before' => 'auth', 'after' => 'nocache'), function(){
     Route::get('/class/{id}', 'AdminController@viewClass');
     Route::post('/class/{id}', 'AdminController@updateClass');
 
-    Route::post('/student/drop', 'AdminController@dropStudent');
+    Route::post('/student/remove', 'AdminController@removeStudent');
 
     Route::get('/attendance', 'AdminController@attendance');
     Route::post('/attendance', 'AdminController@updateAttendance');
+
+    Route::get('/to-drop/{id}', 'AdminController@studentsToDrop');
+
+    Route::get('/dropped/{id}', 'AdminController@droppedStudents');
+
+    Route::post('/drop', 'AdminController@updateStudentStatus');
+    Route::post('/claim', 'AdminController@updateStudentStatus');
 });
 
 Route::get('/password/forgot', 'RemindersController@getRemind');

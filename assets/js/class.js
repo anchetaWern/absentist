@@ -1,4 +1,4 @@
-$('.drop-student').click(function(){
+$('.remove-student').click(function(){
 
 	var self = $(this);
 	var student_id = self.data('id');

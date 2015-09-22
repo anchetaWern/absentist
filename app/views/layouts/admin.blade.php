@@ -71,6 +71,9 @@
   <script src="{{ asset('assets/js/class.js') }}"></script>
 
   <script src="{{ asset('assets/js/attendance.js') }}"></script>
+
+  <script src="{{ asset('assets/js/drop.js') }}"></script>
+  <script src="{{ asset('assets/js/claim.js') }}"></script>
   
 </body>
 </html>

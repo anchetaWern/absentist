@@ -63,10 +63,14 @@
 
 
   <script src="{{ asset('assets/js/jquery.js') }}"></script>
+  <script src="{{ asset('assets/js/handlebars.js') }}"></script>
+
   <script src="{{ asset('assets/lib/bootstrap/js/bootstrap.min.js') }}"></script>
 
   <script src="{{ asset('assets/lib/bootstrap-dialog/bootstrap-dialog.min.js') }}"></script>
   <script src="{{ asset('assets/js/class.js') }}"></script>
+
+  <script src="{{ asset('assets/js/attendance.js') }}"></script>
   
 </body>
 </html>

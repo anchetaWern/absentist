@@ -55,6 +55,8 @@ Route::group(array('before' => 'auth', 'after' => 'nocache'), function(){
 
     Route::post('/student/drop', 'AdminController@dropStudent');
 
+    Route::get('/attendance', 'AdminController@attendance');
+    Route::post('/attendance', 'AdminController@updateAttendance');
 });
 
 Route::get('/password/forgot', 'RemindersController@getRemind');
@@ -62,7 +64,3 @@ Route::post('/password/remind', 'RemindersController@postRemind');
 
 Route::get('/password/reset/{token}', 'RemindersController@getReset');
 Route::post('/password/reset', 'RemindersController@postReset');
-
-Route::get('/tester', function(){
-	return range('monday', 'sunday');
-});

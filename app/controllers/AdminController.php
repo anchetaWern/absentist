@@ -289,6 +289,140 @@ class AdminController extends BaseController {
     }
 
 
+    public function attendance(){
+
+        $user_id = Auth::user()->id;
+
+        //determine the class based on the current date and time
+        $now = Carbon::now();
+        $current_time = $now->format('H:i:s');
+
+
+        $days_of_week = array(
+            'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'
+        );
+
+        $day_of_week = $days_of_week[$now->dayOfWeek - 1];
+
+        $results = DB::select( 
+            DB::raw("SELECT * FROM classes WHERE user_id = :user_id AND (:current_time BETWEEN time_from AND time_to)"), 
+            array(
+                'user_id' => $user_id,
+                'current_time' => $current_time
+        ));
+
+
+        $class = array();
+
+        foreach($results as $row){
+            $days = json_decode($row->days, true);
+           
+            if(in_array($day_of_week, $days) !== false){
+                $class = array(
+                    'id' => $row->id,
+                    'name' => $row->name,
+                    'time_from' => $row->time_from,
+                    'time_to' => $row->time_to,
+                    'days' => $days,
+                    'drop_absences_count' => $row->drop_absences_count
+                );
+            }
+        }
+
+        $students = array();
+
+        if(!empty($class)){
+           $students = DB::table('students')
+                ->join('student_classes', 'students.id', '=', 'student_classes.student_id')
+                ->select('students.id', 'last_name', 'first_name', 'middle_initial')
+                ->where('student_classes.class_id', '=', $class['id'])
+                ->orderBy('gender', 'DESC')
+                ->orderBy('last_name', 'ASC')
+                ->get(); 
+        }
+
+        
+        $page_data = array(
+            'class' => $class,
+            'students' => $students
+        );
+
+        $this->layout->title = 'Attendance';
+        $this->layout->content = View::make('admin.attendance', $page_data);
+
+    }
+
+
+    public function updateAttendance(){
+
+        $date = Carbon::now()->toDateString();
+
+        $class_id = Input::get('class_id');
+        $students = Input::get('students');
+        
+        $drop_absences_count = DB::table('classes')
+                ->where('id', '=', $class_id)
+                ->pluck('drop_absences_count');
+        
+        if(!empty($students['excused'])){
+            foreach($students['excused'] as $student_id){           
+               
+                $attendance = new StudentAttendance;
+                $attendance->student_id = $student_id;
+                $attendance->class_id = $class_id;
+                $attendance->date = $date;
+                $attendance->type = 'excused';
+                $attendance->save();
+            }
+        }
+
+
+        if($students['absent']){
+            foreach($students['absent'] as $student_id){
+
+                $id = $class_id . $student_id;
+
+                $attendance = new StudentAttendance;
+                $attendance->student_id = $student_id;
+                $attendance->class_id = $class_id;
+                $attendance->date = $date;
+                $attendance->type = 'absent';
+                $attendance->save();
+
+               
+                $current_absence_count = DB::table('student_classes')
+                    ->where('id', '=', $id)
+                    ->pluck('current_absence_count');
+
+                $current_absence_count += 1;
+
+                if($current_absence_count == $drop_absences_count){
+                    //update status to: to_drop
+                    DB::table('student_classes')
+                        ->where('id', '=', $id)
+                        ->update(array(
+                            'status' => 'to_drop'
+                        ));
+                }
+                
+                //increment current_absence_count
+                DB::table('student_classes')
+                    ->where('id', $id)
+                    ->increment('current_absence_count');
+
+
+            }
+        }
+
+
+        return array(
+            'type' => 'success',
+            'text' => 'Updated Attendance!'
+        );
+    
+    }
+
+
     public function logout(){
 
         Session::flush();

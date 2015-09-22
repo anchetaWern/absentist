@@ -183,6 +183,7 @@ class AdminController extends BaseController {
                     $student_class->student_id = $student_id;
                     $student_class->class_id = $class_id;
                     $student_class->current_absence_count = 0; //default
+                    $student_class->status = 'has_card';
                     $student_class->save();
                 }
                 
@@ -363,7 +364,7 @@ class AdminController extends BaseController {
         $drop_absences_count = DB::table('classes')
                 ->where('id', '=', $class_id)
                 ->pluck('drop_absences_count');
-        
+
         if(!empty($students['excused'])){
             foreach($students['excused'] as $student_id){           
                

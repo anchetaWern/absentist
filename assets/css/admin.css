@@ -1,3 +1,8 @@
+#logo {
+    width: 24px;
+    display: inline-block;
+}
+
 #filter-box {
     margin-top: 76px;
 }

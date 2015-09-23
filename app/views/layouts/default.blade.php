@@ -19,11 +19,13 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">{{ Config::get('app.title') }}</a>
+        <a class="navbar-brand" href="/">
+          <img src="{{ asset('assets/img/logo.png') }}" id="logo" alt="logo">
+          {{ Config::get('app.title') }}
+        </a>
       </div>
       <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
-          <li class="active"><a href="/">Home</a></li>
           <li><a href="/login">Login</a></li>
           <li><a href="/register">Register</a></li>
         </ul>

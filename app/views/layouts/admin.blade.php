@@ -37,7 +37,10 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="/admin">{{ Config::get('app.title') }}</a>
+        <a class="navbar-brand" href="/admin">
+          <img src="{{ asset('assets/img/logo.png') }}" id="logo" alt="logo">
+          {{ Config::get('app.title') }}
+        </a>
       </div>
       <div class="navbar-collapse collapse navbar-responsive-collapse">
 

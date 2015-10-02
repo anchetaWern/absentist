@@ -55,7 +55,7 @@ Route::group(array('before' => 'auth', 'after' => 'nocache'), function(){
 
     Route::post('/student/remove', 'AdminController@removeStudent');
 
-    Route::get('/attendance', 'AdminController@attendance');
+    Route::get('/attendance/{id?}', 'AdminController@attendance');
     Route::post('/attendance', 'AdminController@updateAttendance');
 
     Route::get('/to-drop/{id}', 'AdminController@studentsToDrop');
@@ -73,3 +73,47 @@ Route::post('/password/remind', 'RemindersController@postRemind');
 
 Route::get('/password/reset/{token}', 'RemindersController@getReset');
 Route::post('/password/reset', 'RemindersController@postReset');
+
+Route::get('/import', function(){
+
+	$class_id = 2;
+	$student_id = '1100723';
+
+	$date = '2015-09-12';
+
+	$id = $class_id . $student_id;
+
+	$drop_absences_count = 1;
+
+	$attendance = new StudentAttendance;
+	$attendance->student_id = $student_id;
+	$attendance->class_id = $class_id;
+	$attendance->date = $date;
+	$attendance->type = 'absent';
+	$attendance->save();
+
+
+	$current_absence_count = DB::table('student_classes')
+	    ->where('id', '=', $id)
+	    ->pluck('current_absence_count');
+
+	$current_absence_count += 1;
+
+	if($current_absence_count == $drop_absences_count){
+	    //update status to: to_drop
+	    DB::table('student_classes')
+	        ->where('id', '=', $id)
+	        ->update(array(
+	            'status' => 'to_drop'
+	        ));
+	}
+
+	//increment current_absence_count
+	DB::table('student_classes')
+	    ->where('id', $id)
+	    ->increment('current_absence_count');
+
+
+	return 'done!';
+
+});

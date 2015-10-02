@@ -1,7 +1,7 @@
 @section('content')
 <div class="row">
 	<div class="col-md-8">
-		<h3>Attendance</h3>
+		<h3>{{ $class['name'] }} Attendance</h3>
 		<table class="table" id="students-table">
 			<thead>
 				<tr>
@@ -24,7 +24,21 @@
 
 	<div class="col-md-4">
 
-		<div class="panel panel-primary" id="filter-box">
+		<div class="panel panel-primary" id="date-box">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Date</h3>
+		  </div>
+		  <div class="panel-body">
+
+			<div class="form-group">
+				<label for="date">Date</label>
+				<input type="text" class="form-control" id="date" placeholder="e.g. 2015-12-25" value="{{ $today }}">
+			</div>
+
+		  </div>
+		</div>
+
+		<div class="panel panel-primary">
 		  <div class="panel-heading">
 		    <h3 class="panel-title">Filter</h3>
 		  </div>

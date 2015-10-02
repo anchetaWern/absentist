@@ -7,8 +7,8 @@
 				<tr>
 					<th>Name</th>
 					<th>Class Code</th>
-					<th>Details</th>
 					<th>Update</th>
+					<th>Attendance</th>
 					<th>To Drop</th>
 					<th>Dropped</th>
 				</tr>
@@ -18,8 +18,8 @@
 				<tr>
 					<td>{{ $class->name }}</td>
 					<td>{{ $class->class_code }}</td>
-					<td>{{ $class->details }}</td>
 					<td><a href="/class/{{ $class->id }}">update</a></td>
+					<td><a href="/attendance/{{ $class->id }}">update</a></td>
 					<td><a href="/to-drop/{{ $class->id }}">view</a></td>
 					<td><a href="/dropped/{{ $class->id }}">view</a></td>
 				</tr>

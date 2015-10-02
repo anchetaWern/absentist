@@ -24,6 +24,8 @@ $('#update-attendance').click(function(){
 
 	var class_id = $(this).data('classid');
 
+	var date = $('#date').val();
+
 	var students = {
 		'excused': [],
 		'absent': []
@@ -44,6 +46,7 @@ $('#update-attendance').click(function(){
 	$.post(
 		'/attendance',
 		{
+			'date': date,
 			'class_id': class_id,
 			'students': students
 		},

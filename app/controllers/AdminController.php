@@ -290,44 +290,69 @@ class AdminController extends BaseController {
     }
 
 
-    public function attendance(){
+    public function attendance($class_id = null){
 
         $user_id = Auth::user()->id;
 
-        //determine the class based on the current date and time
-        $now = Carbon::now();
-        $current_time = $now->format('H:i:s');
+        $today = Carbon::now()->toDateString();
+
+        if(is_null($class_id)){
+
+            //determine the class based on the current date and time
+            $now = Carbon::now();
+            $current_time = $now->format('H:i:s');
 
 
-        $days_of_week = array(
-            'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'
-        );
+            $days_of_week = array(
+                'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'
+            );
 
-        $day_of_week = $days_of_week[$now->dayOfWeek - 1];
+            $day_of_week = $days_of_week[$now->dayOfWeek - 1];
 
-        $results = DB::select( 
-            DB::raw("SELECT * FROM classes WHERE user_id = :user_id AND (:current_time BETWEEN time_from AND time_to)"), 
-            array(
-                'user_id' => $user_id,
-                'current_time' => $current_time
-        ));
+            $results = DB::select( 
+                DB::raw("SELECT * FROM classes WHERE user_id = :user_id AND (:current_time BETWEEN time_from AND time_to)"), 
+                array(
+                    'user_id' => $user_id,
+                    'current_time' => $current_time
+            ));
 
 
-        $class = array();
+            $class = array();
 
-        foreach($results as $row){
-            $days = json_decode($row->days, true);
-           
-            if(in_array($day_of_week, $days) !== false){
+            foreach($results as $row){
+                $days = json_decode($row->days, true);
+               
+                if(in_array($day_of_week, $days) !== false){
+                    $class = array(
+                        'id' => $row->id,
+                        'name' => $row->name,
+                        'time_from' => $row->time_from,
+                        'time_to' => $row->time_to,
+                        'days' => $days,
+                        'drop_absences_count' => $row->drop_absences_count
+                    );
+                }
+            }
+        }else{
+
+            $class_result = DB::table('classes')
+                ->where('id', '=', $class_id)
+                ->first();
+
+            if($class_result){
+
+                $days = json_decode($class_result->days, true);
+
                 $class = array(
-                    'id' => $row->id,
-                    'name' => $row->name,
-                    'time_from' => $row->time_from,
-                    'time_to' => $row->time_to,
+                    'id' => $class_result->id,
+                    'name' => $class_result->name,
+                    'time_from' => $class_result->time_from,
+                    'time_to' => $class_result->time_to,
                     'days' => $days,
-                    'drop_absences_count' => $row->drop_absences_count
+                    'drop_absences_count' => $class_result->drop_absences_count
                 );
             }
+
         }
 
         $students = array();
@@ -340,10 +365,14 @@ class AdminController extends BaseController {
                 ->orderBy('gender', 'DESC')
                 ->orderBy('last_name', 'ASC')
                 ->get(); 
+        }else{
+            return Redirect::to('/admin')
+                ->with('message', array('type' => 'danger', 'text' => 'You don\'t have classes at this time'));
         }
 
         
         $page_data = array(
+            'today' => $today,
             'class' => $class,
             'students' => $students
         );
@@ -356,7 +385,7 @@ class AdminController extends BaseController {
 
     public function updateAttendance(){
 
-        $date = Carbon::now()->toDateString();
+        $date = Input::get('date');
 
         $class_id = Input::get('class_id');
         $students = Input::get('students');
@@ -378,7 +407,7 @@ class AdminController extends BaseController {
         }
 
 
-        if($students['absent']){
+        if(!empty($students['absent'])){
             foreach($students['absent'] as $student_id){
 
                 $id = $class_id . $student_id;
@@ -411,10 +440,8 @@ class AdminController extends BaseController {
                     ->where('id', $id)
                     ->increment('current_absence_count');
 
-
             }
         }
-
 
         return array(
             'type' => 'success',

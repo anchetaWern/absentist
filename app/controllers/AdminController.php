@@ -537,16 +537,43 @@ class AdminController extends BaseController {
 
         $absences = StudentAttendance::where('student_id', '=', $student_id)
             ->where('class_id', '=', $class_id)
+            ->orderBy('date', 'ASC')
             ->get();
+
+        $class = DB::table('classes')->where('id', $class_id)->pluck('name');
   
         $page_data = array(
             'student' => $student,
-            'absences' => $absences
+            'absences' => $absences,
+            'class' => $class
         );
 
         $this->layout->title = 'Absences';
         $this->layout->content = View::make('admin.absences', $page_data);
 
+    }
+
+
+    public function semesterSettings(){
+
+        $sem = DB::table('semester_settings')
+            ->where('id', 1)
+            ->first();
+
+        $page_data = array(
+            'sem' => $sem
+        );
+
+        $this->layout->title = 'Semester Settings';
+        $this->layout->content = View::make('admin.semester_settings', $page_data);
+
+    }
+
+
+    public function updateSemesterSettings(){
+
+        DB::table('semester_settings')->update(Input::all());
+        return Redirect::back()->with('message', array('type' => 'success', 'text' => 'Semester settings is updated!'));
     }
 
 

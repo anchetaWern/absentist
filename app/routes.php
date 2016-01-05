@@ -66,6 +66,10 @@ Route::group(array('before' => 'auth', 'after' => 'nocache'), function(){
     Route::post('/claim', 'AdminController@updateStudentStatus');
 
     Route::get('/absences/{id}', 'AdminController@absences');
+
+
+    Route::get('/semester', 'AdminController@semesterSettings');
+    Route::post('/semester', 'AdminController@updateSemesterSettings');
 });
 
 Route::get('/password/forgot', 'RemindersController@getRemind');

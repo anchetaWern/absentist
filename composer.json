@@ -5,11 +5,11 @@
 	"license": "MIT",
 	"require": {
 		"laravel/framework": "4.2.*",
-		"nesbot/carbon": "1.12.0",
         "schickling/backup": "dev-master",
         "way/database": "dev-master",
         "way/generators": "~2.0",
-        "chumper/datatable": "2.*"
+        "chumper/datatable": "2.*",
+        "nesbot/carbon": "1.12.0"
 	},
 	"autoload": {
 		"classmap": [

@@ -11,6 +11,9 @@
 					<a href="/holidays/new">Create Holidays</a>
 				</li>
 				<li>
+					<a href="/semester">Semester Settings</a>
+				</li>
+				<li>
 					<a href="/classes">List Classes</a>
 				</li>
 				<li>

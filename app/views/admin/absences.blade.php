@@ -2,7 +2,7 @@
 <div class="row">
 		<div class="col-md-8">
 			<h3>Absences of {{ $student->last_name }}, {{ $student->first_name }} {{ $student->middle_initial }} in {{ $class }}</h3>
-			@if($absences)
+			@if(count($absences) > 0)
 			<table class="table">
 				<thead>
 					<tr>
@@ -25,6 +25,10 @@
 					@endforeach
 				</tbody>
 			</table>
+			@else
+			<div class="alert alert-info">
+				No absences yet.
+			</div>
 			@endif
 		</div>
 </div>

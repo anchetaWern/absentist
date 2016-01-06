@@ -2,7 +2,7 @@
 <div class="row">
 		<div class="col-md-8">
 			<h3>Class Cards to Drop in {{ $class }}</h3>
-			@if($to_drop)
+			@if(count($to_drop) > 0)
 			<table class="table">
 				<thead>
 					<tr>
@@ -21,6 +21,10 @@
 					@endforeach
 				</tbody>
 			</table>
+			@else
+			<div class="alert alert-info">
+				No class cards are ready for dropping yet.
+			</div>
 			@endif
 		</div>
 </div>

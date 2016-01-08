@@ -6,8 +6,8 @@ class HomeController extends BaseController {
 
 	public function index(){
 
-		$this->layout->title = 'Home';
-		$this->layout->content = View::make('index');
+		$this->layout->title = 'Login';
+		$this->layout->content = View::make('login');
 
 	}
 
